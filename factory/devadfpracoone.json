@@ -1,0 +1,9 @@
+{
+	"name": "devadfpracoone",
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1445b894-a4e4-49d9-8026-128e84f77621",
+		"tenantId": "b333966d-d1c5-43d2-a7fe-3aec0309e114"
+	}
+}
