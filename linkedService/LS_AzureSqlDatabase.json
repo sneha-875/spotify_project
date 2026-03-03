@@ -1,0 +1,17 @@
+{
+	"name": "LS_AzureSqlDatabase",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "adfpractiseserver.database.windows.net",
+			"database": "free-sql-db-8871273",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "root888",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEFBNzhGQzZFLTI0ODctNDVCNi1CREU4LTM3N0Y0QTlCQzdFRF8yYjk0OGEwZC1iYjMwLTRkZTgtOWQ5NS1kZDYzMjY3OTlhNTAiDQp9"
+		}
+	}
+}
