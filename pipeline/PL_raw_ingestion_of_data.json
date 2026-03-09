@@ -21,7 +21,7 @@
 				],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 0,
+					"retry": 2,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -31,7 +31,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from @{pipeline().parameters.schema}.@{pipeline().parameters.table} where @{pipeline().parameters.cdc} > '@{activity('last_cdc').output.firstRow.cdc}'",
+							"value": "select *\nfrom @{pipeline().parameters.schema}.@{pipeline().parameters.table} where @{pipeline().parameters.cdc} > '@{if(empty(pipeline().parameters.from_date),activity('last_cdc').output.firstRow.cdc,pipeline().parameters.from_date)}'\n\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -109,7 +109,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": "bronze",
-							"folder": "cdc",
+							"folder": {
+								"value": "@{pipeline().parameters.table}_cdc",
+								"type": "Expression"
+							},
 							"file": "cdc.json"
 						}
 					}
@@ -146,12 +149,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(activity('Copy_data_sql_db_adls').output.dataRead,0)",
+						"value": "@greater(activity('Copy_data_sql_db_adls').output.dataRead,0)\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Delete1",
+							"name": "Delete_empty_file",
 							"type": "Delete",
 							"dependsOn": [],
 							"policy": {
@@ -174,6 +177,13 @@
 										},
 										"file": "@concat(pipeline().parameters.table,'_',variables('current'))"
 									}
+								},
+								"logStorageSettings": {
+									"linkedServiceName": {
+										"referenceName": "LSAzureDataLakeStorage_sink",
+										"type": "LinkedServiceReference"
+									},
+									"path": "bronze/logs/raw_ingestion_delete_act"
 								},
 								"enableLogging": true,
 								"storeSettings": {
@@ -271,7 +281,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc\n\n",
+											"type": "Expression"
+										},
 										"file": "empty.json"
 									}
 								}
@@ -300,6 +313,9 @@
 				"type": "string"
 			},
 			"cdc": {
+				"type": "string"
+			},
+			"from_date": {
 				"type": "string"
 			}
 		},
